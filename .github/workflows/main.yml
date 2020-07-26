@@ -27,7 +27,7 @@ jobs:
     
 
     - name: install DecryptLogin
-      run: sudo pip3 install DecryptLogin
+      run: sudo pip3 install DecryptLogin --upgrade
       
       
     - name: Run script
