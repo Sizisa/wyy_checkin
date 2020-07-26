@@ -40,16 +40,16 @@ def run(username, password):
             if res_json['code'] == 200:
                 print(res_json)
                 print('%s签到成功...' % ( client_name))
-                result+='%s签到成功...' % ( client_name)+'\n'
+                result+='%s签到成功...' % ( client_name)+'<br>'
 
 
             else:
                 print(res_json)
                 print('%s签到失败, 原因: %s...' % (client_name, res_json.get('msg')))
-                result+='%s签到失败, 原因: %s...' % (client_name, res_json.get('msg'))+'\n'
+                result+='%s签到失败, 原因: %s...' % (client_name, res_json.get('msg'))+'<br>'
     except Exception as e:
         print(e.args)
-        result+=e.args+'\n'
+        result+=e.args+'<br>'
 
     return result
 
