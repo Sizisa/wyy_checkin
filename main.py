@@ -1,11 +1,19 @@
-import requests
 import re
 from DecryptLogin import login
 from DecryptLogin.platforms.music163 import Cracker
+import os
+import requests
+
+def send(sckey,title,msg):
+    url='http://sc.ftqq.com/%s.send'%(sckey)
+    data={'text':title,'desp':msg}
+    r=requests.post(url=url,data=data)
+    print('server酱返回信息：'+r.text)
 
 
 def run(username, password):
     try:
+        result=''
         lg = login.Login()
         _, session = lg.music163(username, password)
         csrf = re.findall('__csrf=(.*?) for', str(session.cookies))[0]
@@ -30,32 +38,31 @@ def run(username, password):
             res_json = res.json()
             # --判断签到是否成功
             if res_json['code'] == 200:
-                print('账号%s在%s签到成功...' % (username, client_name))
+                print(res_json)
+                print('%s签到成功...' % ( client_name))
+                result+='%s签到成功...' % ( client_name)+'\n'
 
 
             else:
-                print('账号%s在%s签到失败, 原因: %s...' % (username, client_name, res_json.get('msg')))
+                print(res_json)
+                print('%s签到失败, 原因: %s...' % (client_name, res_json.get('msg')))
+                result+='%s签到失败, 原因: %s...' % (client_name, res_json.get('msg'))+'\n'
     except Exception as e:
-        requests.get(
-            'https://sc.ftqq.com/sever酱密钥.send?text=网易云签到脚本运行失败&desp=具体情况未知')
+        print(e.args)
+        result+=e.args+'\n'
+
+    return result
 
 
-my_list = [
-    {
-        'username': '账号1',
-        'password': '密码1',
-    },
-    {
-        'username': '账号2',
-        'password': '密码2',
-    }
-]
 
 
-def main_handler(event, context):
-    return run(username, password)
 
 
 if __name__ == '__main__':
-    for i in my_list:
-        code = run(i['username'], i['password'])
+    username = os.environ['username']
+    password = os.environ['password']
+    sckey = os.environ['sckey']
+
+
+    result=run(username,password)
+    send(sckey,'网易云签到通知',result)
