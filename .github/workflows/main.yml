@@ -24,10 +24,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: install requests
-      run: |
-      sudo pip3 install requests
-      sudo pip3 install DecryptLogin
+    
+
+    - name: install DecryptLogin
+      run: sudo pip3 install DecryptLogin
+      
       
     - name: Run script
       run: python3 main.py
