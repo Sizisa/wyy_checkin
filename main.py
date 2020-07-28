@@ -14,6 +14,7 @@ def send(sckey,title,msg):
 def run(username, password):
     try:
         result=''
+        flag=False
         lg = login.Login()
         _, session = lg.music163(username, password)
         csrf = re.findall('__csrf=(.*?) for', str(session.cookies))[0]
@@ -44,14 +45,16 @@ def run(username, password):
 
 
             else:
+                flag=True
                 print(res_json)
                 print('%s签到失败, 原因: %s...' % (client_name, res_json.get('msg')))
                 result+='%s签到失败, 原因: %s...' % (client_name, res_json.get('msg'))+'<br>'
     except Exception as e:
+        flag=True
         print(e.args)
         result+=e.args+'<br>'
 
-    return result
+    return flag,result
 
 
 
@@ -64,5 +67,6 @@ if __name__ == '__main__':
     sckey = os.environ['sckey']
 
 
-    result=run(username,password)
-    send(sckey,'网易云签到通知',result)
+    flag,result=run(username,password)
+    if flag==True:
+        send(sckey,'网易云签到通知',result)
